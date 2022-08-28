@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-const Home = () => {
+const CartTab = () => {
   return (
     <View
       style={{
@@ -10,9 +10,9 @@ const Home = () => {
         justifyContent: 'center'
       }}
     >
-      <Text>Home</Text>
+      <Text>Cart</Text>
     </View>
   );
 };
 
-export default Home;
+export default CartTab;
