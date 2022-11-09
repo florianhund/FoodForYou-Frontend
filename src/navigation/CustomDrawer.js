@@ -155,7 +155,8 @@ const CustomDrawer = ({ selectedTab, setSelectedTab }) => {
 
   const animatedStyle = {
     borderRadius,
-    transform: [{ scale }]
+    transform: [{ scale }],
+    overflow: 'hidden'
   };
 
   return (

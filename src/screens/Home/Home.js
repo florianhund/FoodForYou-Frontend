@@ -11,6 +11,7 @@ import {
 
 import HorizontalFoodCard from '../../components/HorizontalFoodCard';
 import VerticalFoodCard from '../../components/VerticalFoodCard';
+import FilterModal from './FilterModal';
 import { FONTS, SIZES, COLORS, icons, dummyData } from '../../constants';
 
 const Section = ({ title, onPress, children }) => {
@@ -42,6 +43,8 @@ const Home = () => {
   const [menuList, setMenuList] = useState([]);
   const [recommends, setRecommends] = useState([]);
   const [popular, setPopular] = useState([]);
+
+  const [showFilterModal, setShowFilterModal] = useState(false);
 
   const handleChangeCategory = (categoryId, menuTypeId) => {
     let selectedRecommend = dummyData.menu.find(
@@ -94,7 +97,7 @@ const Home = () => {
           paddingBottom: 0
         }}
       />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => setShowFilterModal(true)}>
         <Image
           source={icons.filter}
           style={{
@@ -173,7 +176,7 @@ const Home = () => {
 
   const renderPopularSection = () => (
     <Section
-      tile='Popular Near You'
+      title='Popular Near You'
       onPress={() => console.log('Show all popular')}
     >
       <FlatList
@@ -263,6 +266,12 @@ const Home = () => {
   return (
     <View style={{ flex: 1 }}>
       {renderSearch()}
+      {showFilterModal && (
+        <FilterModal
+          isVisible={showFilterModal}
+          onClose={() => setShowFilterModal(false)}
+        />
+      )}
       <FlatList
         data={menuList}
         keyExtractor={item => `${item.id}`}
