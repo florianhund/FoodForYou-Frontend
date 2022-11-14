@@ -3,7 +3,12 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 import { COLORS } from '../constants';
 
-const IconButton = ({ containerStyle, icon, iconStyle, onPress }) => {
+const IconButton = ({
+  containerStyle,
+  icon,
+  iconStyle,
+  onPress
+}: Record<string, any>) => {
   return (
     <TouchableOpacity style={containerStyle} onPress={onPress}>
       <Image

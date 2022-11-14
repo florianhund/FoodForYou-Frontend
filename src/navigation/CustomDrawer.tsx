@@ -21,7 +21,12 @@ import {
 
 const Drawer = createDrawerNavigator();
 
-const CustomDrawerItem = ({ label, icon, onPress, isFocused }) => {
+const CustomDrawerItem = ({
+  label,
+  icon,
+  onPress,
+  isFocused
+}: Record<string, any>) => {
   return (
     <TouchableOpacity
       style={{
@@ -31,7 +36,7 @@ const CustomDrawerItem = ({ label, icon, onPress, isFocused }) => {
         alignItems: 'center',
         paddingLeft: SIZES.radius,
         borderRadius: SIZES.base,
-        backgroundColor: isFocused ? COLORS.transparentBlack1 : null
+        backgroundColor: isFocused ? COLORS.transparentBlack1 : undefined
       }}
       onPress={onPress}
     >
@@ -46,7 +51,12 @@ const CustomDrawerItem = ({ label, icon, onPress, isFocused }) => {
   );
 };
 
-const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
+const CustomDrawerContent = ({
+  navigation,
+  selectedTab,
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  setSelectedTab
+}: Record<string, any>) => {
   return (
     <DrawerContentScrollView
       scrollEnabled={true}
@@ -140,8 +150,9 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
   );
 };
 
-const CustomDrawer = ({ selectedTab, setSelectedTab }) => {
-  const [progress, setProgress] = useState(new Animated.Value(0));
+// eslint-disable-next-line @typescript-eslint/no-shadow
+const CustomDrawer = ({ selectedTab, setSelectedTab }: Record<string, any>) => {
+  const [progress, setProgress] = useState<any>(new Animated.Value(0));
 
   const scale = Animated.interpolateNode(progress, {
     inputRange: [0, 1],
@@ -198,15 +209,15 @@ const CustomDrawer = ({ selectedTab, setSelectedTab }) => {
   );
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state: any) {
   return {
     selectedTab: state.tabReducer.selectedTab
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
   return {
-    setSelectedTab: tab => dispatch(setSelectedTab(tab))
+    setSelectedTab: (tab: any) => dispatch(setSelectedTab(tab))
   };
 }
 

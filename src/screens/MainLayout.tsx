@@ -17,7 +17,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 
 import { setSelectedTab } from '../store/tab/actions';
-import { Home, Search, CartTab, Favourite, Notification } from '../screens';
+import { Home, Search, CartTab, Favourite, Notification } from '.';
 import {
   COLORS,
   FONTS,
@@ -35,7 +35,7 @@ const TabButton = ({
   outerContainerStyle,
   innerContainerStyle,
   onPress
-}) => {
+}: Record<any, any>) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <Animated.View
@@ -87,20 +87,21 @@ const MainLayout = ({
   drawerAnimationStyle,
   navigation,
   selectedTab,
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   setSelectedTab
-}) => {
-  const flatListRef = useRef();
+}: Record<any, any>) => {
+  const flatListRef = useRef<any>();
 
   const homeTabFlex = useSharedValue(1);
-  const homeTabColor = useSharedValue(COLORS.white);
+  const homeTabColor = useSharedValue<any>(COLORS.white);
   const searchTabFlex = useSharedValue(1);
-  const searchTabColor = useSharedValue(COLORS.white);
+  const searchTabColor = useSharedValue<any>(COLORS.white);
   const cartTabFlex = useSharedValue(1);
-  const cartTabColor = useSharedValue(COLORS.white);
+  const cartTabColor = useSharedValue<any>(COLORS.white);
   const favouriteTabFlex = useSharedValue(1);
-  const favouriteTabColor = useSharedValue(COLORS.white);
+  const favouriteTabColor = useSharedValue<any>(COLORS.white);
   const notificationTabFlex = useSharedValue(1);
-  const notificationTabColor = useSharedValue(COLORS.white);
+  const notificationTabColor = useSharedValue<any>(COLORS.white);
 
   const homeFlexStyle = useAnimatedStyle(() => ({
     flex: homeTabFlex.value
@@ -146,10 +147,10 @@ const MainLayout = ({
       });
 
       homeTabFlex.value = withTiming(4, { duration: 500 });
-      homeTabColor.value = withTiming(COLORS.primary, { duraction: 500 });
+      homeTabColor.value = withTiming(COLORS.primary, { duration: 500 });
     } else {
       homeTabFlex.value = withTiming(1, { duration: 500 });
-      homeTabColor.value = withTiming(COLORS.white, { duraction: 500 });
+      homeTabColor.value = withTiming(COLORS.white, { duration: 500 });
     }
 
     if (selectedTab === constants.screens.search) {
@@ -159,10 +160,10 @@ const MainLayout = ({
       });
 
       searchTabFlex.value = withTiming(4, { duration: 500 });
-      searchTabColor.value = withTiming(COLORS.primary, { duraction: 500 });
+      searchTabColor.value = withTiming(COLORS.primary, { duration: 500 });
     } else {
       searchTabFlex.value = withTiming(1, { duration: 500 });
-      searchTabColor.value = withTiming(COLORS.white, { duraction: 500 });
+      searchTabColor.value = withTiming(COLORS.white, { duration: 500 });
     }
 
     if (selectedTab === constants.screens.cart) {
@@ -172,10 +173,10 @@ const MainLayout = ({
       });
 
       cartTabFlex.value = withTiming(4, { duration: 500 });
-      cartTabColor.value = withTiming(COLORS.primary, { duraction: 500 });
+      cartTabColor.value = withTiming(COLORS.primary, { duration: 500 });
     } else {
       cartTabFlex.value = withTiming(1, { duration: 500 });
-      cartTabColor.value = withTiming(COLORS.white, { duraction: 500 });
+      cartTabColor.value = withTiming(COLORS.white, { duration: 500 });
     }
 
     if (selectedTab === constants.screens.favourite) {
@@ -185,10 +186,10 @@ const MainLayout = ({
       });
 
       favouriteTabFlex.value = withTiming(4, { duration: 500 });
-      favouriteTabColor.value = withTiming(COLORS.primary, { duraction: 500 });
+      favouriteTabColor.value = withTiming(COLORS.primary, { duration: 500 });
     } else {
       favouriteTabFlex.value = withTiming(1, { duration: 500 });
-      favouriteTabColor.value = withTiming(COLORS.white, { duraction: 500 });
+      favouriteTabColor.value = withTiming(COLORS.white, { duration: 500 });
     }
 
     if (selectedTab === constants.screens.notification) {
@@ -199,11 +200,11 @@ const MainLayout = ({
 
       notificationTabFlex.value = withTiming(4, { duration: 500 });
       notificationTabColor.value = withTiming(COLORS.primary, {
-        duraction: 500
+        duration: 500
       });
     } else {
       notificationTabFlex.value = withTiming(1, { duration: 500 });
-      notificationTabColor.value = withTiming(COLORS.white, { duraction: 500 });
+      notificationTabColor.value = withTiming(COLORS.white, { duration: 500 });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTab]);
@@ -351,15 +352,15 @@ const MainLayout = ({
   );
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state: any) {
   return {
     selectedTab: state.tabReducer.selectedTab
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
   return {
-    setSelectedTab: tab => dispatch(setSelectedTab(tab))
+    setSelectedTab: (tab: any) => dispatch(setSelectedTab(tab))
   };
 }
 

@@ -15,21 +15,21 @@ import TwoPointSlider from '../../components/TwoPointSlider';
 import TextButton from '../../components/TextButton';
 import TextIconButton from '../../components/TextIconButton';
 
-const Section = ({ containerStyle, title, children }) => (
+const Section = ({ containerStyle, title, children }: Record<any, any>) => (
   <View style={{ marginTop: SIZES.padding, ...containerStyle }}>
     <Text style={{ ...FONTS.h3 }}>{title}</Text>
     {children}
   </View>
 );
 
-const FilterModal = ({ isVisible, onClose }) => {
+const FilterModal = ({ isVisible, onClose }: Record<any, any>) => {
   const modalAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const [showFilterModal, setShowFilterModal] = useState(isVisible);
 
-  const [deliveryTime, setDeliveryTime] = useState('');
-  const [ratings, setRatings] = useState('');
-  const [tags, setTags] = useState('');
+  const [deliveryTime, setDeliveryTime] = useState<any>('');
+  const [ratings, setRatings] = useState<any>('');
+  const [tags, setTags] = useState<any>('');
 
   useEffect(() => {
     if (showFilterModal) {

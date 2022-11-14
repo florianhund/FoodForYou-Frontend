@@ -4,7 +4,11 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 
 import { COLORS, FONTS, SIZES, icons } from '../constants';
 
-const VerticalFoodCard = ({ containerStyle, item, onPress }) => {
+const VerticalFoodCard = ({
+  containerStyle,
+  item,
+  onPress
+}: Record<string, any>) => {
   return (
     <TouchableOpacity
       style={{

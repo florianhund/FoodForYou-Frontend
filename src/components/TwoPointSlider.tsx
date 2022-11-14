@@ -12,7 +12,7 @@ const TwoPointSlider = ({
   prefix,
   postfix,
   onValuesChange
-}) => {
+}: Record<string, any>) => {
   return (
     <MultiSlider
       values={values}
@@ -52,7 +52,7 @@ const TwoPointSlider = ({
           </Text>
         </View>
       )}
-      onValuesChange={values => onValuesChange(values)}
+      onValuesChange={inputValues => onValuesChange(inputValues)}
     />
   );
 };

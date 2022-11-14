@@ -4,7 +4,12 @@ import { Text, TouchableOpacity } from 'react-native';
 
 import { FONTS, COLORS } from '../constants';
 
-const TextButton = ({ label, labelStyle, buttonContainerStyle, onPress }) => {
+const TextButton = ({
+  label,
+  labelStyle,
+  buttonContainerStyle,
+  onPress
+}: Record<string, any>) => {
   return (
     <TouchableOpacity
       style={{

@@ -14,7 +14,7 @@ import VerticalFoodCard from '../../components/VerticalFoodCard';
 import FilterModal from './FilterModal';
 import { FONTS, SIZES, COLORS, icons, dummyData } from '../../constants';
 
-const Section = ({ title, onPress, children }) => {
+const Section = ({ title, onPress, children }: Record<any, any>) => {
   return (
     <View>
       <View
@@ -40,13 +40,13 @@ const Section = ({ title, onPress, children }) => {
 const Home = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(1);
   const [selectedMenuType, setSelectedMenuType] = useState(1);
-  const [menuList, setMenuList] = useState([]);
-  const [recommends, setRecommends] = useState([]);
-  const [popular, setPopular] = useState([]);
+  const [menuList, setMenuList] = useState<any>([]);
+  const [recommends, setRecommends] = useState<any>([]);
+  const [popular, setPopular] = useState<any>([]);
 
   const [showFilterModal, setShowFilterModal] = useState(false);
 
-  const handleChangeCategory = (categoryId, menuTypeId) => {
+  const handleChangeCategory = (categoryId: any, menuTypeId: any) => {
     let selectedRecommend = dummyData.menu.find(
       menu => menu.name === 'Recommended'
     );

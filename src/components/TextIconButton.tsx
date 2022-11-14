@@ -11,7 +11,7 @@ const TextIconButton = ({
   icon,
   iconStyle,
   onPress
-}) => {
+}: Record<string, any>) => {
   return (
     <TouchableOpacity
       style={{
