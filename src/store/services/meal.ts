@@ -5,9 +5,9 @@ const baseURL = process.env.API_BASE_URI;
 export const getMealById = (id: string, fields: string, orderBy: string) =>
   axios.get(`${baseURL}/meals/${id}?fields=${fields}&sort_by=${orderBy}`);
 
-export const getMeals = (id: string, fields: string, orderBy: string) =>
+export const getMeals = (fields: string, orderBy: string) =>
   axios.get(
-    `${baseURL}/meals?fields=${fields}&sort_by=${orderBy}${baseURL}/meals/${id}?fields=${fields}&sort_by=${orderBy}`
+    `${baseURL}/meals?fields=${fields}&sort_by=${orderBy}${baseURL}/meals?fields=${fields}&sort_by=${orderBy}`
   );
 
 export const postMeal = (data: any) =>
