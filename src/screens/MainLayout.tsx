@@ -14,9 +14,9 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
-import { connect } from 'react-redux';
 
-import { setSelectedTab } from '../store/tab/actions';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { setSelectedTab } from '../store/actions/tab';
 import { Home, Search, CartTab, Favourite, Notification } from '.';
 import {
   COLORS,
@@ -83,13 +83,10 @@ const TabButton = ({
   );
 };
 
-const MainLayout = ({
-  drawerAnimationStyle,
-  navigation,
-  selectedTab,
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  setSelectedTab
-}: Record<any, any>) => {
+const MainLayout = ({ drawerAnimationStyle, navigation }: Record<any, any>) => {
+  const { selectedTab } = useAppSelector(state => state.tabs);
+  const dispatch = useAppDispatch();
+
   const flatListRef = useRef<any>();
 
   const homeTabFlex = useSharedValue(1);
@@ -135,7 +132,7 @@ const MainLayout = ({
   }));
 
   useEffect(() => {
-    setSelectedTab(constants.screens.home);
+    dispatch(setSelectedTab(constants.screens.home));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -312,7 +309,7 @@ const MainLayout = ({
             isFocused={selectedTab === constants.screens.home}
             outerContainerStyle={homeFlexStyle}
             innerContainerStyle={homeColorStyle}
-            onPress={() => setSelectedTab(constants.screens.home)}
+            onPress={() => dispatch(setSelectedTab(constants.screens.home))}
           />
           <TabButton
             label={constants.screens.search}
@@ -320,7 +317,7 @@ const MainLayout = ({
             isFocused={selectedTab === constants.screens.search}
             outerContainerStyle={searchFlexStyle}
             innerContainerStyle={searchColorStyle}
-            onPress={() => setSelectedTab(constants.screens.search)}
+            onPress={() => dispatch(setSelectedTab(constants.screens.search))}
           />
           <TabButton
             label={constants.screens.cart}
@@ -328,7 +325,7 @@ const MainLayout = ({
             isFocused={selectedTab === constants.screens.cart}
             outerContainerStyle={cartFlexStyle}
             innerContainerStyle={cartColorStyle}
-            onPress={() => setSelectedTab(constants.screens.cart)}
+            onPress={() => dispatch(setSelectedTab(constants.screens.cart))}
           />
           <TabButton
             label={constants.screens.favourite}
@@ -336,7 +333,9 @@ const MainLayout = ({
             isFocused={selectedTab === constants.screens.favourite}
             outerContainerStyle={favouriteFlexStyle}
             innerContainerStyle={favouriteColorStyle}
-            onPress={() => setSelectedTab(constants.screens.favourite)}
+            onPress={() =>
+              dispatch(setSelectedTab(constants.screens.favourite))
+            }
           />
           <TabButton
             label={constants.screens.notification}
@@ -344,7 +343,9 @@ const MainLayout = ({
             isFocused={selectedTab === constants.screens.notification}
             outerContainerStyle={notificationFlexStyle}
             innerContainerStyle={notificationColorStyle}
-            onPress={() => setSelectedTab(constants.screens.notification)}
+            onPress={() =>
+              dispatch(setSelectedTab(constants.screens.notification))
+            }
           />
         </View>
       </View>
@@ -352,16 +353,4 @@ const MainLayout = ({
   );
 };
 
-function mapStateToProps(state: any) {
-  return {
-    selectedTab: state.tabReducer.selectedTab
-  };
-}
-
-function mapDispatchToProps(dispatch: any) {
-  return {
-    setSelectedTab: (tab: any) => dispatch(setSelectedTab(tab))
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);
+export default MainLayout;

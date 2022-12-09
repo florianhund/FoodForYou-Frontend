@@ -1,7 +1,17 @@
-import { combineReducers } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 
-import tabReducer from '../tab/reducer';
-import meals from './meal';
-import tabs from './tab';
+import mealReducer from './meal';
+import tabReducer from './tab';
 
-export default combineReducers({ meals, tabs, tabReducer });
+const store = configureStore({
+  reducer: {
+    meals: mealReducer,
+    tabs: tabReducer
+  }
+});
+
+export const rootReducer = store;
+
+export type RootState = ReturnType<typeof store.getState>;
+
+export type AppDispatch = typeof store.dispatch;

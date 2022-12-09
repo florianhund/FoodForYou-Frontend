@@ -6,9 +6,8 @@ import {
   DrawerContentScrollView
 } from '@react-navigation/drawer';
 import Animated from 'react-native-reanimated';
-import { connect } from 'react-redux';
-import { setSelectedTab } from '../store/tab/actions';
 
+import { setSelectedTab } from '../store/actions/tab';
 import { MainLayout } from '../screens';
 import {
   COLORS,
@@ -18,6 +17,7 @@ import {
   icons,
   dummyData
 } from '../constants';
+import { useAppSelector, useAppDispatch } from '../hooks';
 
 const Drawer = createDrawerNavigator();
 
@@ -57,6 +57,7 @@ const CustomDrawerContent = ({
   // eslint-disable-next-line @typescript-eslint/no-shadow
   setSelectedTab
 }: Record<string, any>) => {
+  const dispatch = useAppDispatch();
   return (
     <DrawerContentScrollView
       scrollEnabled={true}
@@ -102,7 +103,7 @@ const CustomDrawerContent = ({
             icon={icons.home}
             isFocused={selectedTab == constants.screens.home}
             onPress={() => {
-              setSelectedTab(constants.screens.home);
+              dispatch(setSelectedTab(constants.screens.home));
               navigation.navigate('MainLayout');
             }}
           />
@@ -115,7 +116,7 @@ const CustomDrawerContent = ({
             icon={icons.notification}
             isFocused={selectedTab == constants.screens.notification}
             onPress={() => {
-              setSelectedTab(constants.screens.notification);
+              dispatch(setSelectedTab(constants.screens.notification));
               navigation.navigate('MainLayout');
             }}
           />
@@ -124,7 +125,7 @@ const CustomDrawerContent = ({
             icon={icons.favourite}
             isFocused={selectedTab == constants.screens.favourite}
             onPress={() => {
-              setSelectedTab(constants.screens.favourite);
+              dispatch(setSelectedTab(constants.screens.favourite));
               navigation.navigate('MainLayout');
             }}
           />
@@ -150,8 +151,9 @@ const CustomDrawerContent = ({
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-shadow
-const CustomDrawer = ({ selectedTab, setSelectedTab }: Record<string, any>) => {
+const CustomDrawer = () => {
+  const { selectedTab } = useAppSelector(state => state.tabs);
+
   const [progress, setProgress] = useState<any>(new Animated.Value(0));
 
   const scale = Animated.interpolateNode(progress, {
@@ -209,16 +211,4 @@ const CustomDrawer = ({ selectedTab, setSelectedTab }: Record<string, any>) => {
   );
 };
 
-function mapStateToProps(state: any) {
-  return {
-    selectedTab: state.tabReducer.selectedTab
-  };
-}
-
-function mapDispatchToProps(dispatch: any) {
-  return {
-    setSelectedTab: (tab: any) => dispatch(setSelectedTab(tab))
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CustomDrawer);
+export default CustomDrawer;
