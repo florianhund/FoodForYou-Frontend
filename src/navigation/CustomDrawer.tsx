@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import {
@@ -9,99 +8,87 @@ import Animated from 'react-native-reanimated';
 
 import { setSelectedTab } from '../store/actions/tab';
 import { MainLayout } from '../screens';
-import {
-  COLORS,
-  FONTS,
-  SIZES,
-  constants,
-  icons,
-  dummyData
-} from '../constants';
+import { COLORS, constants, icons, dummyData } from '../constants';
 import { useAppSelector, useAppDispatch } from '../hooks';
+import styles from './styles';
+import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 
 const Drawer = createDrawerNavigator();
 
-const CustomDrawerItem = ({
+interface CustomDrawerItemProps {
+  label: string;
+  icon: any;
+  onPress?: () => void;
+  isFocused?: boolean;
+}
+
+const CustomDrawerItem: React.FC<CustomDrawerItemProps> = ({
   label,
   icon,
   onPress,
   isFocused
-}: Record<string, any>) => {
+}) => {
   return (
     <TouchableOpacity
-      style={{
-        flexDirection: 'row',
-        height: 40,
-        marginBottom: SIZES.base,
-        alignItems: 'center',
-        paddingLeft: SIZES.radius,
-        borderRadius: SIZES.base,
-        backgroundColor: isFocused ? COLORS.transparentBlack1 : undefined
-      }}
+      style={[
+        styles.itemOpacity,
+        { backgroundColor: isFocused ? COLORS.transparentBlack1 : undefined }
+      ]}
       onPress={onPress}
     >
-      <Image
-        source={icon}
-        style={{ width: 20, height: 20, tintColor: COLORS.white }}
-      />
-      <Text style={{ marginLeft: 15, color: COLORS.white, ...FONTS.h3 }}>
-        {label}
-      </Text>
+      <Image source={icon} style={styles.itemImage} />
+      <Text style={styles.itemText}>{label}</Text>
     </TouchableOpacity>
   );
 };
 
-const CustomDrawerContent = ({
+interface CustomDrawerConentProps {
+  navigation: DrawerNavigationHelpers;
+  selectedTab: string;
+  setSelectedTab: (tab: string) => any;
+}
+
+const CustomDrawerContent: React.FC<CustomDrawerConentProps> = ({
   navigation,
   selectedTab,
   // eslint-disable-next-line @typescript-eslint/no-shadow
   setSelectedTab
-}: Record<string, any>) => {
+}) => {
   const dispatch = useAppDispatch();
   return (
     <DrawerContentScrollView
       scrollEnabled={true}
-      contentContainerStyle={{ flex: 1 }}
+      contentContainerStyle={styles.contentDrawerScroll}
     >
-      <View style={{ flex: 1, paddingHorizontal: SIZES.radius }}>
-        <View style={{ alignItems: 'flex-start', justifyContent: 'center' }}>
+      <View style={styles.contentWrapper}>
+        <View style={styles.contentView}>
           <TouchableOpacity
-            style={{ alignItems: 'center', justifyContent: 'center' }}
+            style={styles.contentOpacity}
             onPress={() => navigation.closeDrawer()}
           >
-            <Image
-              source={icons.cross}
-              style={{ height: 35, width: 35, tintColor: COLORS.white }}
-            />
+            <Image source={icons.cross} style={styles.contentImage} />
           </TouchableOpacity>
         </View>
-
         <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            marginTop: SIZES.radius,
-            alignItems: 'center'
-          }}
+          style={styles.contentProfile}
           onPress={() => console.log('Profile')}
         >
           <Image
             source={dummyData.myProfile?.profile_image}
-            style={{ width: 50, height: 50, borderRadius: SIZES.radius }}
+            style={styles.contentProfileImage}
           />
-          <View style={{ marginLeft: SIZES.radius }}>
-            <Text style={{ color: COLORS.white, ...FONTS.h3 }}>
+          <View style={styles.contentProfileView}>
+            <Text style={styles.contentProfileHeader}>
               {dummyData.myProfile?.name}
             </Text>
-            <Text style={{ color: COLORS.white, ...FONTS.body4 }}>
-              View your profile
-            </Text>
+            <Text style={styles.contentProfileText}>View your profile</Text>
           </View>
         </TouchableOpacity>
-        <View style={{ flex: 1, marginTop: SIZES.padding }}>
+        <View style={styles.contentNavigation}>
           <CustomDrawerItem
             label={constants.screens.home}
             icon={icons.home}
-            isFocused={selectedTab == constants.screens.home}
+            isFocused={selectedTab === constants.screens.home}
             onPress={() => {
               dispatch(setSelectedTab(constants.screens.home));
               navigation.navigate('MainLayout');
@@ -114,7 +101,7 @@ const CustomDrawerContent = ({
           <CustomDrawerItem
             label={constants.screens.notification}
             icon={icons.notification}
-            isFocused={selectedTab == constants.screens.notification}
+            isFocused={selectedTab === constants.screens.notification}
             onPress={() => {
               dispatch(setSelectedTab(constants.screens.notification));
               navigation.navigate('MainLayout');
@@ -123,27 +110,20 @@ const CustomDrawerContent = ({
           <CustomDrawerItem
             label={constants.screens.favourite}
             icon={icons.favourite}
-            isFocused={selectedTab == constants.screens.favourite}
+            isFocused={selectedTab === constants.screens.favourite}
             onPress={() => {
               dispatch(setSelectedTab(constants.screens.favourite));
               navigation.navigate('MainLayout');
             }}
           />
-          <View
-            style={{
-              height: 1,
-              marginVertical: SIZES.radius,
-              marginLeft: SIZES.radius,
-              backgroundColor: COLORS.lightGray1
-            }}
-          />
+          <View style={styles.contentNavigationDivider} />
           <CustomDrawerItem label='Track Your Order' icon={icons.location} />
           <CustomDrawerItem label='Coupons' icon={icons.coupon} />
           <CustomDrawerItem label='Settings' icon={icons.setting} />
           <CustomDrawerItem label='Invite a Friend' icon={icons.profile} />
           <CustomDrawerItem label='Help Center' icon={icons.help} />
         </View>
-        <View style={{ marginBottom: SIZES.padding }}>
+        <View style={styles.contentNavigationLogout}>
           <CustomDrawerItem label='Logout' icon={icons.logout} />
         </View>
       </View>
@@ -151,7 +131,7 @@ const CustomDrawerContent = ({
   );
 };
 
-const CustomDrawer = () => {
+const CustomDrawer: React.FC = () => {
   const { selectedTab } = useAppSelector(state => state.tabs);
 
   const [progress, setProgress] = useState<any>(new Animated.Value(0));
@@ -173,20 +153,14 @@ const CustomDrawer = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.primary }}>
+    <View style={styles.drawerWrapper}>
       <Drawer.Navigator
         drawerType='slide'
         overlayColor='transparent'
-        drawerStyle={{
-          flex: 1,
-          width: '65%',
-          paddingRight: 20,
-          backgroundColor: 'transparent'
-        }}
-        sceneContainerStyle={{
-          backgroundColor: 'transparent'
-        }}
+        drawerStyle={styles.drawerNavigator}
+        sceneContainerStyle={styles.drawerNavigatorContainer}
         initialRouteName='MainLayout'
+        // eslint-disable-next-line react/no-unstable-nested-components
         drawerContent={props => {
           setTimeout(() => {
             setProgress(props.progress);

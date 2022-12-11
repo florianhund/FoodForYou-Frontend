@@ -1,7 +1,8 @@
 import ActionTypes from '../constants';
+import { AppDispatch } from '../reducers';
 import { getMeals } from '../services';
 
-export const getAllMeals = () => async (dispatch: any) => {
+export const getAllMeals = () => async (dispatch: AppDispatch) => {
   try {
     const { data } = await getMeals('', '');
 

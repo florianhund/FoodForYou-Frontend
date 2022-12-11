@@ -1,6 +1,8 @@
+import { AnyAction } from 'redux';
+
 import ActionTypes from '../constants';
 
-export default (state = { selectedTab: '' }, action: any) => {
+const reducer = (state = { selectedTab: '' }, action: AnyAction) => {
   switch (action.type) {
     case ActionTypes.SET_SELECTED_TAB:
       return {
@@ -11,3 +13,5 @@ export default (state = { selectedTab: '' }, action: any) => {
       return state;
   }
 };
+
+export default reducer;

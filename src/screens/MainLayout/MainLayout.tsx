@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useRef } from 'react';
 import {
   View,
@@ -6,7 +5,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Image,
-  FlatList
+  FlatList,
+  StyleProp
 } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -15,65 +15,44 @@ import Animated, {
 } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { setSelectedTab } from '../store/actions/tab';
-import { Home, Search, CartTab, Favourite, Notification } from '.';
-import {
-  COLORS,
-  FONTS,
-  SIZES,
-  icons,
-  constants,
-  dummyData
-} from '../constants';
-import Header from '../components/Header';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { setSelectedTab } from '../../store/actions/tab';
+import { Home, Search, CartTab, Favourite, Notification } from '..';
+import { COLORS, SIZES, icons, constants, dummyData } from '../../constants';
+import Header from '../../components/Header/Header';
+import styles from './styles';
+import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 
-const TabButton = ({
+interface TabButtonProps {
+  label: string;
+  icon: any;
+  isFocused: boolean;
+  outerContainerStyle: StyleProp<any>;
+  innerContainerStyle: StyleProp<any>;
+  onPress: () => void;
+}
+
+const TabButton: React.FC<TabButtonProps> = ({
   label,
   icon,
   isFocused,
   outerContainerStyle,
   innerContainerStyle,
   onPress
-}: Record<any, any>) => {
+}) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <Animated.View
-        style={[
-          { flex: 1, alignItems: 'center', justifyContent: 'center' },
-          outerContainerStyle
-        ]}
-      >
-        <Animated.View
-          style={[
-            {
-              flexDirection: 'row',
-              width: '80%',
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 20
-            },
-            innerContainerStyle
-          ]}
-        >
+      <Animated.View style={[styles.tabAnimatedWrapper, outerContainerStyle]}>
+        <Animated.View style={[styles.tabAnimatedView, innerContainerStyle]}>
           <Image
             source={icon}
-            style={{
-              width: 20,
-              height: 20,
-              tintColor: isFocused ? COLORS.white : COLORS.gray
-            }}
+            style={[
+              styles.tabImage,
+              { tintColor: isFocused ? COLORS.white : COLORS.gray }
+            ]}
           />
           {isFocused && (
-            <Text
-              numberOfLines={1}
-              style={{
-                marginLeft: SIZES.base,
-                color: COLORS.white,
-                ...FONTS.h3
-              }}
-            >
+            <Text numberOfLines={1} style={styles.tabText}>
               {label}
             </Text>
           )}
@@ -83,11 +62,19 @@ const TabButton = ({
   );
 };
 
-const MainLayout = ({ drawerAnimationStyle, navigation }: Record<any, any>) => {
+interface MainLayoutProps {
+  drawerAnimationStyle: StyleProp<any>;
+  navigation: DrawerNavigationHelpers;
+}
+
+const MainLayout: React.FC<MainLayoutProps> = ({
+  drawerAnimationStyle,
+  navigation
+}) => {
   const { selectedTab } = useAppSelector(state => state.tabs);
   const dispatch = useAppDispatch();
 
-  const flatListRef = useRef<any>();
+  const flatListRef = useRef<FlatList>(null);
 
   const homeTabFlex = useSharedValue(1);
   const homeTabColor = useSharedValue<any>(COLORS.white);
@@ -133,8 +120,7 @@ const MainLayout = ({ drawerAnimationStyle, navigation }: Record<any, any>) => {
 
   useEffect(() => {
     dispatch(setSelectedTab(constants.screens.home));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (selectedTab === constants.screens.home) {
@@ -207,53 +193,28 @@ const MainLayout = ({ drawerAnimationStyle, navigation }: Record<any, any>) => {
   }, [selectedTab]);
 
   return (
-    <Animated.View
-      style={{
-        flex: 1,
-        backgroundColor: COLORS.white,
-        ...drawerAnimationStyle
-      }}
-    >
+    <Animated.View style={[styles.mainWrapper, drawerAnimationStyle]}>
       <Header
-        containerStyle={{
-          height: 50,
-          paddingHorizontal: SIZES.padding,
-          marginTop: 40,
-          alignItems: 'center'
-        }}
+        containerStyle={styles.mainHeader}
         title={selectedTab.toUpperCase()}
         leftComponent={
           <TouchableOpacity
-            style={{
-              width: 40,
-              height: 40,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderWidth: 1,
-              borderColor: COLORS.gray2,
-              borderRadius: SIZES.radius
-            }}
+            style={styles.mainLeftOpacity}
             onPress={() => navigation.openDrawer()}
           >
             <Image source={icons.menu} />
           </TouchableOpacity>
         }
         rightComponent={
-          <TouchableOpacity
-            style={{
-              borderRadius: SIZES.radius,
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
+          <TouchableOpacity style={styles.mainRightOpacity}>
             <Image
               source={dummyData.myProfile?.profile_image}
-              style={{ width: 40, height: 40, borderRadius: SIZES.radius }}
+              style={styles.mainImage}
             />
           </TouchableOpacity>
         }
       />
-      <View style={{ flex: 1 }}>
+      <View style={styles.mainFlatlistWrapper}>
         <FlatList
           ref={flatListRef}
           horizontal
@@ -264,8 +225,8 @@ const MainLayout = ({ drawerAnimationStyle, navigation }: Record<any, any>) => {
           showsHorizontalScrollIndicator={false}
           data={constants.bottom_tabs}
           keyExtractor={item => `${item.id}`}
-          renderItem={({ item, index }) => (
-            <View style={{ height: SIZES.height, width: SIZES.width }}>
+          renderItem={({ item }) => (
+            <View style={styles.mainScreens}>
               {item.label === constants.screens.home && <Home />}
               {item.label === constants.screens.search && <Search />}
               {item.label === constants.screens.cart && <CartTab />}
@@ -277,32 +238,14 @@ const MainLayout = ({ drawerAnimationStyle, navigation }: Record<any, any>) => {
           )}
         />
       </View>
-      <View style={{ height: 100, justifyContent: 'flex-end' }}>
+      <View style={styles.mainGradientWrapper}>
         <LinearGradient
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 4 }}
           colors={[COLORS.transparent, COLORS.lightGray1]}
-          style={{
-            position: 'absolute',
-            top: -20,
-            left: 0,
-            right: 0,
-            height: 100,
-            borderTopLeftRadius: 15,
-            borderTopRightRadius: 15
-          }}
+          style={styles.mainGradient}
         />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            paddingHorizontal: SIZES.radius,
-            paddingBottom: 10,
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            backgroundColor: COLORS.white
-          }}
-        >
+        <View style={styles.mainTabButtonWrapper}>
           <TabButton
             label={constants.screens.home}
             icon={icons.home}

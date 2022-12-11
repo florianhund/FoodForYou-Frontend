@@ -9,27 +9,25 @@ import {
   FlatList
 } from 'react-native';
 
-import HorizontalFoodCard from '../../components/HorizontalFoodCard';
-import VerticalFoodCard from '../../components/VerticalFoodCard';
-import FilterModal from './FilterModal';
+import HorizontalFoodCard from '../../components/HorizontalFoodCard/HorizontalFoodCard';
+import VerticalFoodCard from '../../components/VerticalFoodCard/VerticalFoodCard';
+import FilterModal from './FilterModal/FilterModal';
 import { FONTS, SIZES, COLORS, icons, dummyData } from '../../constants';
+import styles from './styles';
 
-const Section = ({ title, onPress, children }: Record<any, any>) => {
+interface SectionProps {
+  title: string;
+  onPress: () => void;
+  children: React.ReactNode;
+}
+
+const Section: React.FC<SectionProps> = ({ title, onPress, children }) => {
   return (
     <View>
-      <View
-        style={{
-          flexDirection: 'row',
-          marginHorizontal: SIZES.padding,
-          marginTop: 30,
-          marginBottom: 20
-        }}
-      >
-        <Text style={{ flex: 1, ...FONTS.h3 }}>{title}</Text>
+      <View style={styles.sectionWrapper}>
+        <Text style={styles.sectionTitle}>{title}</Text>
         <TouchableOpacity onPress={onPress}>
-          <Text style={{ color: COLORS.primary, ...FONTS.body3 }}>
-            Show All
-          </Text>
+          <Text style={styles.sectionText}>Show All</Text>
         </TouchableOpacity>
       </View>
       {children}
@@ -71,41 +69,11 @@ const Home = () => {
   }, []);
 
   const renderSearch = () => (
-    <View
-      style={{
-        flexDirection: 'row',
-        height: 40,
-        alignItems: 'center',
-        marginHorizontal: SIZES.padding,
-        marginVertical: SIZES.base,
-        paddingHorizontal: SIZES.radius,
-        borderRadius: SIZES.radius,
-        backgroundColor: COLORS.lightGray2
-      }}
-    >
-      <Image
-        source={icons.search}
-        style={{ width: 20, height: 20, tintColor: COLORS.black }}
-      />
-      <TextInput
-        placeholder='search food...'
-        style={{
-          flex: 1,
-          marginLeft: SIZES.radius,
-          ...FONTS.body3,
-          paddingTop: 0,
-          paddingBottom: 0
-        }}
-      />
+    <View style={styles.searchWrapper}>
+      <Image source={icons.search} style={styles.searchImage} />
+      <TextInput placeholder='search food...' style={styles.searchInput} />
       <TouchableOpacity onPress={() => setShowFilterModal(true)}>
-        <Image
-          source={icons.filter}
-          style={{
-            height: 20,
-            width: 20,
-            tintColor: COLORS.black
-          }}
-        />
+        <Image source={icons.filter} style={styles.searchFilterImage} />
       </TouchableOpacity>
     </View>
   );
@@ -116,24 +84,29 @@ const Home = () => {
       data={dummyData.menu}
       keyExtractor={item => `${item.id}`}
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ marginTop: 30, marginBottom: 20 }}
+      contentContainerStyle={styles.menuTypesContainerStyle}
       renderItem={({ item, index }) => (
         <TouchableOpacity
-          style={{
-            marginLeft: SIZES.padding,
-            marginRight: index === dummyData.menu.length - 1 ? SIZES.padding : 0
-          }}
+          style={[
+            styles.menuTypesOpacity,
+            {
+              marginRight:
+                index === dummyData.menu.length - 1 ? SIZES.padding : 0
+            }
+          ]}
           onPress={() => {
             setSelectedMenuType(item.id);
             handleChangeCategory(selectedCategoryId, item.id);
           }}
         >
           <Text
-            style={{
-              color:
-                selectedMenuType === item.id ? COLORS.primary : COLORS.black,
-              ...FONTS.h3
-            }}
+            style={[
+              styles.menuTypesText,
+              {
+                color:
+                  selectedMenuType === item.id ? COLORS.primary : COLORS.black
+              }
+            ]}
           >
             {item.name}
           </Text>
@@ -205,37 +178,34 @@ const Home = () => {
       showsHorizontalScrollIndicator={false}
       renderItem={({ item, index }) => (
         <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            height: 55,
-            marginLeft: index === 0 ? SIZES.padding : SIZES.radius,
-            marginTop: SIZES.padding,
-            marginRight:
-              index === dummyData.categories.length - 1 ? SIZES.padding : 0,
-            paddingHorizontal: 8,
-            borderRadius: SIZES.radius,
-            backgroundColor:
-              selectedCategoryId === item.id
-                ? COLORS.primary
-                : COLORS.lightGray2
-          }}
+          style={[
+            styles.foodCategoriesOpacity,
+            {
+              marginLeft: index === 0 ? SIZES.padding : SIZES.radius,
+              marginRight:
+                index === dummyData.categories.length - 1 ? SIZES.padding : 0,
+              backgroundColor:
+                selectedCategoryId === item.id
+                  ? COLORS.primary
+                  : COLORS.lightGray2
+            }
+          ]}
           onPress={() => {
             setSelectedCategoryId(item.id);
             handleChangeCategory(item.id, selectedMenuType);
           }}
         >
-          <Image
-            source={item.icon}
-            style={{ marginTop: 5, height: 50, width: 50 }}
-          />
+          <Image source={item.icon} style={styles.foodCategoriesImage} />
           <Text
-            style={{
-              alignSelf: 'center',
-              marginRight: SIZES.base,
-              color:
-                selectedCategoryId === item.id ? COLORS.white : COLORS.darkGray,
-              ...FONTS.h3
-            }}
+            style={[
+              styles.foodCategoriesText,
+              {
+                color:
+                  selectedCategoryId === item.id
+                    ? COLORS.white
+                    : COLORS.darkGray
+              }
+            ]}
           >
             {item.name}
           </Text>
@@ -247,24 +217,15 @@ const Home = () => {
   const renderDeliveryTo = () => (
     <View style={{ marginTop: SIZES.padding, marginHorizontal: SIZES.padding }}>
       <Text style={{ color: COLORS.primary, ...FONTS.body3 }}>DELIVERY TO</Text>
-      <TouchableOpacity
-        style={{
-          flexDirection: 'row',
-          marginTop: SIZES.base,
-          alignItems: 'center'
-        }}
-      >
+      <TouchableOpacity style={styles.deliveryOpacity}>
         <Text>{dummyData?.myProfile.address}</Text>
-        <Image
-          source={icons.down_arrow}
-          style={{ marginLeft: SIZES.base, height: 20, width: 20 }}
-        />
+        <Image source={icons.down_arrow} style={styles.deliveryImage} />
       </TouchableOpacity>
     </View>
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.homeWrapper}>
       {renderSearch()}
       {showFilterModal && (
         <FilterModal
@@ -300,7 +261,7 @@ const Home = () => {
             />
           );
         }}
-        ListFooterComponent={<View style={{ height: 200 }} />}
+        ListFooterComponent={<View style={styles.homeListFooter} />}
       />
     </View>
   );

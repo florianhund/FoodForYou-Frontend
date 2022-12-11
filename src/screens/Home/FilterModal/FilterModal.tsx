@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Text,
@@ -6,30 +5,47 @@ import {
   Animated,
   ScrollView,
   TouchableWithoutFeedback,
-  Modal
+  Modal,
+  StyleProp
 } from 'react-native';
 
-import { COLORS, FONTS, SIZES, constants, icons } from '../../constants';
-import IconButton from '../../components/IconButton';
-import TwoPointSlider from '../../components/TwoPointSlider';
-import TextButton from '../../components/TextButton';
-import TextIconButton from '../../components/TextIconButton';
+import { COLORS, FONTS, SIZES, constants, icons } from '../../../constants';
+import IconButton from '../../../components/IconButton/IconButton';
+import TwoPointSlider from '../../../components/TwoPointSlider/TwoPointSlider';
+import TextButton from '../../../components/TextButton/TextButton';
+import TextIconButton from '../../../components/TextIconButton/TextIconButton';
+import styles from './styles';
 
-const Section = ({ containerStyle, title, children }: Record<any, any>) => (
-  <View style={{ marginTop: SIZES.padding, ...containerStyle }}>
-    <Text style={{ ...FONTS.h3 }}>{title}</Text>
+interface SectionProps {
+  containerStyle?: StyleProp<any>;
+  title: string;
+  children: React.ReactNode;
+}
+
+const Section: React.FC<SectionProps> = ({
+  containerStyle,
+  title,
+  children
+}) => (
+  <View style={[styles.sectionWrapper, containerStyle]}>
+    <Text style={styles.sectionText}>{title}</Text>
     {children}
   </View>
 );
 
-const FilterModal = ({ isVisible, onClose }: Record<any, any>) => {
+interface FilterModalProps {
+  isVisible: boolean;
+  onClose: () => void;
+}
+
+const FilterModal: React.FC<FilterModalProps> = ({ isVisible, onClose }) => {
   const modalAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const [showFilterModal, setShowFilterModal] = useState(isVisible);
 
-  const [deliveryTime, setDeliveryTime] = useState<any>('');
-  const [ratings, setRatings] = useState<any>('');
-  const [tags, setTags] = useState<any>('');
+  const [deliveryTime, setDeliveryTime] = useState<number | null>(null);
+  const [ratings, setRatings] = useState<number | null>(null);
+  const [tags, setTags] = useState<number | null>(null);
 
   useEffect(() => {
     if (showFilterModal) {
@@ -55,7 +71,7 @@ const FilterModal = ({ isVisible, onClose }: Record<any, any>) => {
 
   const renderDistance = () => (
     <Section title='Distance'>
-      <View style={{ alignItems: 'center' }}>
+      <View style={styles.distanceWrapper}>
         <TwoPointSlider
           values={[3, 10]}
           min={1}
@@ -68,14 +84,9 @@ const FilterModal = ({ isVisible, onClose }: Record<any, any>) => {
   );
 
   const renderDeliveryTime = () => (
+    // eslint-disable-next-line react-native/no-inline-styles
     <Section title='Delivery Time' containerStyle={{ marginTop: 40 }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          marginTop: SIZES.radius
-        }}
-      >
+      <View style={styles.deliveryTimeWrapper}>
         {constants.delivery_time.map((item, i) => (
           <TextButton
             key={`delivery_time-${i}`}
@@ -84,15 +95,13 @@ const FilterModal = ({ isVisible, onClose }: Record<any, any>) => {
               color: item.id === deliveryTime ? COLORS.white : COLORS.gray,
               ...FONTS.body3
             }}
-            buttonContainerStyle={{
-              width: '30%',
-              height: 50,
-              margin: 5,
-              alignItems: 'center',
-              borderRadius: SIZES.base,
-              backgroundColor:
-                item.id === deliveryTime ? COLORS.primary : COLORS.lightGray2
-            }}
+            buttonContainerStyle={[
+              styles.deliveryTimeButton,
+              {
+                backgroundColor:
+                  item.id === deliveryTime ? COLORS.primary : COLORS.lightGray2
+              }
+            ]}
             onPress={() => setDeliveryTime(item.id)}
           />
         ))}
@@ -102,7 +111,7 @@ const FilterModal = ({ isVisible, onClose }: Record<any, any>) => {
 
   const renderPricingRange = () => (
     <Section title='Pricing Range'>
-      <View style={{ alignItems: 'center' }}>
+      <View style={styles.priceRangeWrapper}>
         <TwoPointSlider
           values={[10, 50]}
           min={1}
@@ -115,21 +124,20 @@ const FilterModal = ({ isVisible, onClose }: Record<any, any>) => {
   );
 
   const renderRatings = () => (
+    // eslint-disable-next-line react-native/no-inline-styles
     <Section title='Ratings' containerStyle={{ marginTop: 40 }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+      <View style={styles.ratingWrapper}>
         {constants.ratings.map((item, i) => (
           <TextIconButton
             key={`ratings-${i}`}
-            containerStyle={{
-              flex: 1,
-              height: 50,
-              margin: 5,
-              alignItems: 'center',
-              borderRadius: SIZES.base,
-              backgroundColor:
-                item.id === ratings ? COLORS.primary : COLORS.lightGray2
-            }}
-            label={item.label}
+            containerStyle={[
+              styles.ratingButton,
+              {
+                backgroundColor:
+                  item.id === ratings ? COLORS.primary : COLORS.lightGray2
+              }
+            ]}
+            label={item.label.toString()}
             labelStyle={{
               color: item.id === ratings ? COLORS.white : COLORS.gray
             }}
@@ -146,6 +154,7 @@ const FilterModal = ({ isVisible, onClose }: Record<any, any>) => {
 
   const renderTags = () => (
     <Section title='Tags'>
+      {/* eslint-disable-next-line react-native/no-inline-styles */}
       <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
         {constants.tags.map((item, i) => (
           <TextButton
@@ -155,15 +164,13 @@ const FilterModal = ({ isVisible, onClose }: Record<any, any>) => {
               color: item.id === tags ? COLORS.white : COLORS.gray,
               ...FONTS.body3
             }}
-            buttonContainerStyle={{
-              height: 50,
-              margin: 5,
-              paddingHorizontal: SIZES.padding,
-              alignItems: 'center',
-              borderRadius: SIZES.base,
-              backgroundColor:
-                item.id === tags ? COLORS.primary : COLORS.lightGray2
-            }}
+            buttonContainerStyle={[
+              styles.tagsButton,
+              {
+                backgroundColor:
+                  item.id === tags ? COLORS.primary : COLORS.lightGray2
+              }
+            ]}
             onPress={() => setTags(item.id)}
           />
         ))}
@@ -173,49 +180,23 @@ const FilterModal = ({ isVisible, onClose }: Record<any, any>) => {
 
   return (
     <Modal animationType='fade' transparent visible={isVisible}>
-      <View style={{ flex: 1, backgroundColor: COLORS.transparentBlack7 }}>
+      <View style={styles.filterWrapper}>
         <TouchableWithoutFeedback onPress={() => setShowFilterModal(false)}>
-          <View
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0
-            }}
-          />
+          <View style={styles.filterView} />
         </TouchableWithoutFeedback>
-        <Animated.View
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: modalY,
-            width: '100%',
-            height: '100%',
-            padding: SIZES.padding,
-            borderTopRightRadius: SIZES.padding,
-            borderTopLeftRadius: SIZES.padding,
-            backgroundColor: COLORS.white
-          }}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ flex: 1, ...FONTS.h3, fontSize: 18 }}>
-              Filter Your Search
-            </Text>
+        <Animated.View style={[styles.filterAnimatedView, { top: modalY }]}>
+          <View style={styles.filterHeaderWrapper}>
+            <Text style={styles.filterHeader}>Filter Your Search</Text>
             <IconButton
-              containerStyle={{
-                borderWidth: 2,
-                borderRadius: 10,
-                borderColor: COLORS.gray2
-              }}
+              containerStyle={styles.filterCloseIconContainer}
               icon={icons.cross}
-              iconStyle={{ tintColor: COLORS.gray2 }}
+              iconStyle={styles.filerCloseIcon}
               onPress={() => setShowFilterModal(false)}
             />
           </View>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 250 }}
+            contentContainerStyle={styles.filterScrollView}
           >
             {renderDistance()}
             {renderDeliveryTime()}
@@ -223,25 +204,10 @@ const FilterModal = ({ isVisible, onClose }: Record<any, any>) => {
             {renderRatings()}
             {renderTags()}
           </ScrollView>
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 90,
-              left: 0,
-              right: 0,
-              height: 110,
-              paddingHorizontal: SIZES.padding,
-              paddingVertical: SIZES.radius,
-              backgroundColor: COLORS.white
-            }}
-          >
+          <View style={styles.filterFooter}>
             <TextButton
               label='Apply Filters'
-              buttonContainerStyle={{
-                height: 50,
-                borderRadius: SIZES.base,
-                backgroundColor: COLORS.primary
-              }}
+              buttonContainerStyle={styles.filterSubmitButton}
               onPress={() => {}}
             />
           </View>
