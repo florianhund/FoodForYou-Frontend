@@ -14,6 +14,9 @@ import VerticalFoodCard from '../../components/VerticalFoodCard/VerticalFoodCard
 import FilterModal from './FilterModal/FilterModal';
 import { FONTS, SIZES, COLORS, icons, dummyData } from '../../constants';
 import styles from './styles';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getAllMeals } from '../../store/actions/meal';
+import axios from 'axios';
 
 interface SectionProps {
   title: string;
@@ -35,8 +38,11 @@ const Section: React.FC<SectionProps> = ({ title, onPress, children }) => {
   );
 };
 
-const Home = () => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState(1);
+const Home: React.FC = () => {
+  const { meals } = useAppSelector(state => state.meals);
+  const dispatch = useAppDispatch();
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState('Fast Food');
   const [selectedMenuType, setSelectedMenuType] = useState(1);
   const [menuList, setMenuList] = useState<any>([]);
   const [recommends, setRecommends] = useState<any>([]);
@@ -63,10 +69,19 @@ const Home = () => {
     );
   };
 
+  const handleChangeCategory2 = (category: any) => {
+    setRecommends(meals.filter(meal => meal.tags?.includes(category)));
+    setPopular(meals.filter(meal => meal.tags?.includes(category)));
+  };
+
   useEffect(() => {
-    handleChangeCategory(selectedCategoryId, selectedMenuType);
+    handleChangeCategory2(selectedCategoryId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    dispatch(getAllMeals());
+  }, [dispatch]);
 
   const renderSearch = () => (
     <View style={styles.searchWrapper}>
@@ -96,7 +111,7 @@ const Home = () => {
           ]}
           onPress={() => {
             setSelectedMenuType(item.id);
-            handleChangeCategory(selectedCategoryId, item.id);
+            handleChangeCategory2(selectedCategoryId);
           }}
         >
           <Text
@@ -122,7 +137,7 @@ const Home = () => {
     >
       <FlatList
         data={recommends}
-        keyExtractor={item => `${item.id}`}
+        keyExtractor={item => `${item._id}`}
         horizontal
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => (
@@ -154,7 +169,7 @@ const Home = () => {
     >
       <FlatList
         data={popular}
-        keyExtractor={item => `${item.id}`}
+        keyExtractor={item => `${item._id}`}
         horizontal
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => (
@@ -172,8 +187,8 @@ const Home = () => {
 
   const renderFoodCategories = () => (
     <FlatList
-      data={dummyData.categories}
-      keyExtractor={item => `${item.id}`}
+      data={dummyData.categories2}
+      keyExtractor={item => `${item}`}
       horizontal
       showsHorizontalScrollIndicator={false}
       renderItem={({ item, index }) => (
@@ -183,31 +198,27 @@ const Home = () => {
             {
               marginLeft: index === 0 ? SIZES.padding : SIZES.radius,
               marginRight:
-                index === dummyData.categories.length - 1 ? SIZES.padding : 0,
+                index === dummyData.categories2.length - 1 ? SIZES.padding : 0,
               backgroundColor:
-                selectedCategoryId === item.id
-                  ? COLORS.primary
-                  : COLORS.lightGray2
+                selectedCategoryId === item ? COLORS.primary : COLORS.lightGray2
             }
           ]}
           onPress={() => {
-            setSelectedCategoryId(item.id);
-            handleChangeCategory(item.id, selectedMenuType);
+            setSelectedCategoryId(item);
+            handleChangeCategory2(item);
           }}
         >
-          <Image source={item.icon} style={styles.foodCategoriesImage} />
+          {/* <Image source={item} style={styles.foodCategoriesImage} /> */}
           <Text
             style={[
               styles.foodCategoriesText,
               {
                 color:
-                  selectedCategoryId === item.id
-                    ? COLORS.white
-                    : COLORS.darkGray
+                  selectedCategoryId === item ? COLORS.white : COLORS.darkGray
               }
             ]}
           >
-            {item.name}
+            {item}
           </Text>
         </TouchableOpacity>
       )}
@@ -234,8 +245,8 @@ const Home = () => {
         />
       )}
       <FlatList
-        data={menuList}
-        keyExtractor={item => `${item.id}`}
+        data={meals}
+        keyExtractor={item => `${item._id}`}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <View>

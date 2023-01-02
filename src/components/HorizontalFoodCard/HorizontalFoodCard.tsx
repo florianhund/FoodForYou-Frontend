@@ -19,7 +19,7 @@ const HorizontalFoodCard: React.FC<Props> = ({
 }) => {
   return (
     <TouchableOpacity style={[styles.opacity, containerStyle]}>
-      <Image source={item.image} style={imageStyle} />
+      <Image source={{ uri: item.images[0]?.url }} style={imageStyle} />
       <View style={styles.textWrapper}>
         <Text style={styles.header}>{item.name}</Text>
         <Text style={styles.description}>{item.description}</Text>

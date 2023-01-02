@@ -1,9 +1,9 @@
 import {
-  getMeals,
+  getAllMeals,
   getMealById,
   postMeal,
   updateMeal,
   deleteMeal
 } from './meal';
 
-export { getMeals, getMealById, postMeal, updateMeal, deleteMeal };
+export { getAllMeals, getMealById, postMeal, updateMeal, deleteMeal };

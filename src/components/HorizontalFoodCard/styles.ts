@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   caloriesWrapper: {
     flexDirection: 'row',
     position: 'absolute',
-    top: 5,
+    bottom: 5,
     right: SIZES.radius
   },
   caloriesImage: {

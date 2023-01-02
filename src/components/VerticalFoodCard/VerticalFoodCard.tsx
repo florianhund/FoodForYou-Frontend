@@ -33,7 +33,7 @@ const VerticalFoodCard: React.FC<Props> = ({
         />
       </View>
       <View style={styles.body}>
-        <Image source={item.image} style={styles.image} />
+        <Image source={{ uri: item.images[0]?.url }} style={styles.image} />
       </View>
       <View style={styles.textWrapper}>
         <Text style={styles.textHeader}>{item.name}</Text>

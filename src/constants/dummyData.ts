@@ -26,6 +26,19 @@ const categories = [
   }
 ];
 
+const categories2 = [
+  'Fast Food',
+  'Burger',
+  'Pizza',
+  'Asian',
+  'Dessert',
+  'Breakfast',
+  'Vegetarian',
+  'Vegan',
+  'Mexican',
+  'Italian'
+];
+
 const hamburger = {
   id: 1,
   name: 'Hamburger',
@@ -106,5 +119,6 @@ const menu = [
 export default {
   myProfile,
   categories,
-  menu
+  menu,
+  categories2
 };
