@@ -9,6 +9,7 @@ interface Props {
   labelStyle?: StyleProp<any>;
   icon: any;
   iconStyle?: StyleProp<any>;
+  iconPosition?: 'LEFT';
   onPress: () => void;
 }
 
@@ -18,15 +19,21 @@ const TextIconButton: React.FC<Props> = ({
   labelStyle,
   icon,
   iconStyle,
-  onPress
+  onPress,
+  iconPosition
 }) => {
   return (
     <TouchableOpacity
       style={[styles.wrapper, containerStyle]}
       onPress={onPress}
     >
+      {iconPosition === 'LEFT' && (
+        <Image source={icon} style={[styles.icon, iconStyle]} />
+      )}
       <Text style={[styles.text, labelStyle]}>{label}</Text>
-      <Image source={icon} style={[styles.icon, iconStyle]} />
+      {iconPosition !== 'LEFT' && (
+        <Image source={icon} style={[styles.icon, iconStyle]} />
+      )}
     </TouchableOpacity>
   );
 };
