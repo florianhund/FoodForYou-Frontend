@@ -4,12 +4,13 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../App';
 
 import AuthLayout from '../AuthLayout/AuthLayout';
-import { COLORS, FONTS, icons, SIZES } from '../../../constants';
+import { API_BASE_URI, COLORS, FONTS, icons, SIZES } from '../../../constants';
 import styles from './styles';
 import FormInput from '../../../components/FormInput/FormInput';
 import { utils } from '../../../utils';
 import TextButton from '../../../components/TextButton/TextButton';
 import TextIconButton from '../../../components/TextIconButton/TextIconButton';
+import axios, { AxiosResponse } from 'axios';
 
 const SignUp: React.FC<StackScreenProps<RootStackParamList, 'SignUp'>> = ({
   navigation
@@ -135,7 +136,31 @@ const SignUp: React.FC<StackScreenProps<RootStackParamList, 'SignUp'>> = ({
               ? COLORS.primary
               : COLORS.transparentPrimray
           }}
-          onPress={() => navigation.navigate('Otp')}
+          onPress={async () => {
+            const [firstName, lastName] = username.split(' ');
+            let response: AxiosResponse;
+            let userId: string | undefined;
+            try {
+              response = await axios.post(`${API_BASE_URI}/users`, {
+                email,
+                password,
+                firstName,
+                lastName
+              });
+              if (response.status === 201) {
+                // password testTest1_
+                console.log('success');
+                userId = response.headers.location?.split('/')[2];
+                console.log(userId);
+              }
+              await axios.get(
+                `${API_BASE_URI}/users/${userId}/send-verification`
+              );
+              navigation.navigate('Otp');
+            } catch (err: any) {
+              console.log(err.response.data);
+            }
+          }}
         />
         <View style={styles.signInWrapper}>
           <Text style={styles.signInText}>Already have an account?</Text>

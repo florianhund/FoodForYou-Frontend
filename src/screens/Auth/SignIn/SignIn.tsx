@@ -4,13 +4,14 @@ import React, { useState } from 'react';
 import AuthLayout from '../AuthLayout/AuthLayout';
 import styles from './styles';
 import FormInput from '../../../components/FormInput/FormInput';
-import { COLORS, FONTS, icons, SIZES } from '../../../constants';
+import { API_BASE_URI, COLORS, FONTS, icons, SIZES } from '../../../constants';
 import { utils } from '../../../utils';
 import CustomSwitch from '../../../components/CustomSwitch/CustomSwitch';
 import TextButton from '../../../components/TextButton/TextButton';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../App';
 import TextIconButton from '../../../components/TextIconButton/TextIconButton';
+import axios from 'axios';
 
 const SignIn: React.FC<StackScreenProps<RootStackParamList, 'SignIn'>> = ({
   navigation
@@ -104,7 +105,25 @@ const SignIn: React.FC<StackScreenProps<RootStackParamList, 'SignIn'>> = ({
               ? COLORS.primary
               : COLORS.transparentPrimray
           }}
-          onPress={() => {}}
+          onPress={async () => {
+            try {
+              const response = await fetch(`${API_BASE_URI}/auth/login`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  email,
+                  password
+                })
+              });
+              console.log(response.ok);
+              console.log(response.status);
+              console.log(response.headers);
+            } catch (err) {
+              console.log(err);
+            }
+          }}
         />
         <View style={styles.signUpWrapper}>
           <Text style={styles.signUpText}>Don't have an account?</Text>
@@ -131,7 +150,10 @@ const SignIn: React.FC<StackScreenProps<RootStackParamList, 'SignIn'>> = ({
           iconStyle={{ tintColor: COLORS.white }}
           label='Continue With Facebook'
           labelStyle={{ marginLeft: SIZES.radius, color: COLORS.white }}
-          onPress={() => console.log('Facebook Log In')}
+          onPress={() => {
+            console.log('Facebook Log In');
+            Linking.openURL(`${API_BASE_URI}/auth/facebook`);
+          }}
         />
         <TextIconButton
           // eslint-disable-next-line react-native/no-inline-styles
@@ -149,7 +171,7 @@ const SignIn: React.FC<StackScreenProps<RootStackParamList, 'SignIn'>> = ({
           labelStyle={{ marginLeft: SIZES.radius }}
           onPress={() => {
             console.log('Google Log In');
-            Linking.openURL('http://172.19.157.105:5000/api/v2/auth/google');
+            Linking.openURL(`${API_BASE_URI}/auth/google`);
           }}
         />
       </View>
