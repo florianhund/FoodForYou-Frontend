@@ -11,11 +11,17 @@ import TextButton from '../../../components/TextButton/TextButton';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../App';
 import TextIconButton from '../../../components/TextIconButton/TextIconButton';
-import axios from 'axios';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
+import { signIn } from '../../../store/actions/auth';
+import { signOut } from '../../../store/actions/auth';
 
 const SignIn: React.FC<StackScreenProps<RootStackParamList, 'SignIn'>> = ({
   navigation
 }) => {
+  const auth = useAppSelector(state => state.auth);
+  const dispatch = useAppDispatch();
+  console.log(auth);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -106,23 +112,26 @@ const SignIn: React.FC<StackScreenProps<RootStackParamList, 'SignIn'>> = ({
               : COLORS.transparentPrimray
           }}
           onPress={async () => {
-            try {
-              const response = await fetch(`${API_BASE_URI}/auth/login`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  email,
-                  password
-                })
-              });
-              console.log(response.ok);
-              console.log(response.status);
-              console.log(response.headers);
-            } catch (err) {
-              console.log(err);
-            }
+            // try {
+            //   const response = await fetch(`${API_BASE_URI}/auth/login`, {
+            //     method: 'POST',
+            //     headers: {
+            //       'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({
+            //       email,
+            //       password
+            //     })
+            //   });
+            //   console.log(response.ok);
+            //   console.log(response.status);
+            //   console.log(response.headers);
+            // } catch (err) {
+            //   console.log(err);
+            // }
+            dispatch(
+              signIn(email, password, () => navigation.navigate('Home'))
+            );
           }}
         />
         <View style={styles.signUpWrapper}>
@@ -132,7 +141,10 @@ const SignIn: React.FC<StackScreenProps<RootStackParamList, 'SignIn'>> = ({
             // eslint-disable-next-line react-native/no-inline-styles
             buttonContainerStyle={{ marginLeft: 3, backgroundColor: null }}
             labelStyle={{ color: COLORS.primary, ...FONTS.h3 }}
-            onPress={() => navigation.navigate('SignUp')}
+            // onPress={() => navigation.navigate('SignUp')}
+            onPress={() => {
+              dispatch(signOut());
+            }}
           />
         </View>
       </View>

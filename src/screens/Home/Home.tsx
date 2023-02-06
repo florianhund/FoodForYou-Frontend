@@ -16,7 +16,6 @@ import { FONTS, SIZES, COLORS, icons, dummyData } from '../../constants';
 import styles from './styles';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getAllMeals } from '../../store/actions/meal';
-import axios from 'axios';
 
 interface SectionProps {
   title: string;

@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import mealReducer from './meal';
 import tabReducer from './tab';
+import authReducer from './auth';
 
 const store = configureStore({
   reducer: {
     meals: mealReducer,
-    tabs: tabReducer
+    tabs: tabReducer,
+    auth: authReducer
   }
 });
 
